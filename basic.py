@@ -93,24 +93,34 @@
 
 #and
 
-a=58
-b=56
+# a=58
+# b=56
 
-print(a>50 and b>50)
-
-
-#or
-
-a=True
-b=False
-
-print(a or b)
+# print(a>50 and b>50)
 
 
-#not
+# #or
 
-a=True
-b=False
+# a=True
+# b=False
 
-print(not a)
-print(not b)
+# print(a or b)
+
+
+# #not
+
+# a=True
+# b=False
+
+# print(not a)
+# print(not b)
+
+data=[1,5,6,3]
+data1=[x for x in data if x%2==0]
+print(data1)
+# for x in data:
+#     if x%2==0:
+#         data1.append(x)
+# print(data1)
+
+#
