@@ -1,0 +1,148 @@
+🔷 Machine Learning (ML)
+
+Machine Learning is a subset of Artificial Intelligence where systems learn from data using algorithms and make predictions or decisions without being explicitly programmed.
+
+Key Points:
+
+Uses traditional algorithms like:
+
+Linear Regression
+
+Decision Trees
+
+Support Vector Machines (SVM)
+
+K-Nearest Neighbors (KNN)
+
+Requires manual feature extraction (humans decide what data features to use)
+
+Works best with structured data (tables, spreadsheets)
+
+Needs less data and less computational power
+
+Easier to understand and debug
+
+Example:
+
+Predicting house prices using size, location, and number of rooms via Linear Regression.
+
+🔷 Deep Learning (DL)
+
+Deep Learning is a subset of Machine Learning based on Artificial Neural Networks with multiple layers (deep networks) that automatically learn features from data.
+
+Key Points:
+
+Uses Neural Networks like:
+
+CNN (Convolutional Neural Networks)
+
+RNN (Recurrent Neural Networks)
+
+Transformers
+
+Performs automatic feature extraction
+
+Works very well with unstructured data:
+
+Images
+
+Audio
+
+Video
+
+Text
+
+Requires massive data and high computational power (GPU/TPU)
+
+More complex and harder to interpret
+
+Example:
+
+Face recognition or voice assistants like Alexa/Siri.
+
+📊 Comparison Table
+Aspect	Machine Learning	Deep Learning
+Definition	Subset of AI using algorithms	Subset of ML using neural networks
+Feature Engineering	Manual	Automatic
+Data Requirement	Small to medium	Very large
+Accuracy	Good	Very high (with big data)
+Complexity	Low to medium	High
+Hardware	CPU sufficient	GPU typically needed
+Best For	Structured data	Unstructured data
+Examples	Spam detection, Credit scoring	Image recognition, Speech recognition
+🧠 Simple Understanding
+
+✅ Machine Learning = Brain + Rules (Human guided)
+
+✅ Deep Learning = Brain learns everything by itself (Self-learning)
+
+🧩 Relationship Diagram
+
+AI
+└── Machine Learning
+    └── Deep Learning
+
+When to use what?
+
+✅ Use Machine Learning when:
+
+Data is structured
+
+You need fast and explainable models
+
+✅ Use Deep Learning when:
+
+Data is complex (images, video, audio)
+
+Accuracy is more important than interpretability
+
+
+
+
+
+What is a Neural Network?
+
+A Neural Network is made of interconnected nodes called neurons that process information in layers to learn from data.
+
+Main Components:
+
+Input Layer-Receives raw data (numbers, pixels, features)
+Hidden Layers-Process data using mathematical functions
+        -Where learning actually happens
+Output Layer-Produces the final result (prediction/classification)
+
+⚙️ How Neural Network Works
+
+Input data enters the network
+
+Each neuron applies:
+
+Weight
+
+Bias
+
+Activation function
+
+Data flows forward (Forward Propagation)
+
+Error is calculated (Loss)
+
+Weights are adjusted using Backpropagation
+
+Process repeats until accuracy improves
+
+Simple Flow:
+Input → Weights → Activation → Output → Error → Weight Adjustment
+
+
+Output=Activation((Input×Weight)+Bias)
+
+Common activation functions:
+
+ReLU
+
+Sigmoid
+
+Softmax
+
+Tanh
