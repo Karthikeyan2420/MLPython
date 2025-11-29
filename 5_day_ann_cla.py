@@ -1,71 +1,90 @@
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
 
+# -------------------------------------------------------
+# 1. Load CSV
+# -------------------------------------------------------
+data = pd.read_csv("employee_data_ann.csv")   # <--- change to your file
 
-# Load CSV
-df = pd.read_csv("employee_data_ann.csv")
+# -------------------------------------------------------
+# 2. Separate features and target
+# -------------------------------------------------------
+X = data.drop("left", axis=1)
+y = data["left"]
 
-print("Dataset shape:", df.shape)
+# -------------------------------------------------------
+# 3. Identify categorical and numeric columns
+# -------------------------------------------------------
+categorical_cols = ["department", "education", "job_role"]
+numeric_cols = [col for col in X.columns if col not in categorical_cols]
 
-# Features & target
-X = df.drop(columns=['emp_id', 'left'])
-y = df['left']
-
-# Separate numeric & categorical
-num_cols = X.select_dtypes(include=['int64', 'float64']).columns
-cat_cols = X.select_dtypes(include=['object']).columns
-
-# Preprocessing
-preprocessor = ColumnTransformer([
-    ('num', StandardScaler(), num_cols),
-    ('cat', OneHotEncoder(handle_unknown='ignore'), cat_cols)
-])
-
-X_processed = preprocessor.fit_transform(X)
-
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(
-    X_processed, y, test_size=0.2, random_state=42
+# -------------------------------------------------------
+# 4. Preprocessing (OneHot + Scaling)
+# -------------------------------------------------------
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("cat", OneHotEncoder(drop="first"), categorical_cols),
+        ("num", StandardScaler(), numeric_cols)
+    ]
 )
 
-# Build ANN model
-model = Sequential([
-    Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
-    Dropout(0.3),
-    Dense(32, activation='relu'),
-    Dropout(0.2),
-    Dense(1, activation='sigmoid')
+# -------------------------------------------------------
+# 5. Split data
+# -------------------------------------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# -------------------------------------------------------
+# 6. Fit preprocessing
+# -------------------------------------------------------
+X_train_processed = preprocessor.fit_transform(X_train)
+X_test_processed = preprocessor.transform(X_test)
+
+# Convert to numpy arrays for TensorFlow
+X_train_processed = np.array(X_train_processed.toarray() if hasattr(X_train_processed, "toarray") else X_train_processed)
+X_test_processed = np.array(X_test_processed.toarray() if hasattr(X_test_processed, "toarray") else X_test_processed)
+
+# -------------------------------------------------------
+# 7. Build ANN Model
+# -------------------------------------------------------
+model = keras.Sequential([
+    layers.Dense(32, activation="relu", input_shape=(X_train_processed.shape[1],)),
+    layers.Dense(16, activation="relu"),
+    layers.Dense(1, activation="sigmoid")  # Binary output
 ])
 
 model.compile(
-    optimizer='adam',
-    loss='binary_crossentropy',
-    metrics=['accuracy']
+    optimizer="adam",
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
 )
 
-# Train model
+# -------------------------------------------------------
+# 8. Train Model
+# -------------------------------------------------------
 history = model.fit(
-    X_train, y_train,
+    X_train_processed,
+    y_train,
+    epochs=25,
+    batch_size=16,
     validation_split=0.2,
-    epochs=50,
-    batch_size=32,
     verbose=1
 )
 
-# Evaluate
-y_pred_prob = model.predict(X_test)
-y_pred = (y_pred_prob > 0.5).astype(int)
+# -------------------------------------------------------
+# 9. Evaluate Model
+# -------------------------------------------------------
+y_pred = (model.predict(X_test_processed) > 0.5).astype(int)
+accuracy = accuracy_score(y_test, y_pred)
 
-print("\n✅ Accuracy:", accuracy_score(y_test, y_pred))
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
-print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
-
-# Save the model
-# model.save("employee_ann_model.h5")
-print("\n✅ ANN Model saved as employee_ann_model.h5")
+print(f"\nModel Accuracy: {accuracy * 100:.2f}%")
